@@ -1,0 +1,53 @@
+include: "rules/00_common.smk"
+
+##### Target rules #####
+
+rule all:
+    input:
+#####################
+# 01_pre-processing.smk
+#####################
+# copy_videos
+        expand(os.path.join(config["working_dir"], "raw_videos/{sample}.avi"),
+                sample = SAMPLES
+        ),
+# decompress_videos
+        expand(os.path.join(config["working_dir"], "decompressed/{sample}.avi"),
+                sample = SAMPLES
+        ),
+# set_split_coords
+        expand("results/split_coord_images/{assay}/{sample}.png",
+                assay = ASSAYS,
+                sample = SAMPLES
+        ),
+## split_videos
+#        expand(os.path.join(config["data_store_dir"], "split/{assay}/{sample}_{quadrant}.mp4"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS
+#        ),
+######################
+## 02_tracking.smk
+######################
+## track_videos
+#        expand(os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS        
+#        ),
+## trajectories_to_csv
+#        expand(os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS         
+#        ),
+
+#####################
+
+##### Modules #####
+
+include: "rules/01_pre-processing.smk"
+#include: "rules/02_tracking.smk"

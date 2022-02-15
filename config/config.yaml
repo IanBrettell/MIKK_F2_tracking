@@ -1,0 +1,35 @@
+####################
+# Config files
+####################
+samples_file:
+    config/samples.csv
+excluded_videos:
+    config/tracking_fails.csv
+####################
+# Parameters
+####################
+
+####################
+# Locations
+####################
+repo_dir:
+    /hps/software/users/birney/ian/repos/MIKK_F2_tracking
+raw_data_dir:
+    /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/all_F2
+working_dir:
+    /hps/nobackup/birney/users/ian/MIKK_F2_tracking
+data_store_dir:
+    /nfs/research/birney/projects/indigene/MIKK_F2_tracking
+####################
+# Containers
+####################
+ffmpeg:
+    docker://jrottenberg/ffmpeg:4.4-ubuntu
+opencv:
+    /hps/nobackup/birney/users/ian/containers/MIKK_F0_tracking/opencv_4.5.1.sif
+idtrackerai:
+    # NOTE: Dockerfile for this container: workflow/envs/idtrackerai/Dockerfile
+    docker://saulpierottiebi/idtrackerai_cpu_gui:latest
+
+
+

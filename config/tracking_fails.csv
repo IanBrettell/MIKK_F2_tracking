@@ -1,0 +1,19 @@
+sample,assay,quadrant,log_file,error_message
+20191112_1236_18-2_L_A,novel_object,q3,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191112_1236_18-2_L_A/q3.log,#ValueError: There is not part in the video where the 2 animals are visible. Try a different segmentation or check the number of animals in the video.
+20191112_1303_17-1_L_A,novel_object,q3,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191112_1303_17-1_L_A/q3.log,#ValueError: There is not part in the video where the 2 animals are visible. Try a different segmentation or check the number of animals in the video.
+20191114_1129_32-2_R_A,novel_object,q1,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191114_1129_32-2_R_A/q1.log,#ValueError: The model diverged
+20191114_1129_32-2_R_A,novel_object,q4,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191114_1129_32-2_R_A/q4.log,#RuntimeError: Unable to set dataset extent (dimension cannot exceed the existing maximal size (new: 343981 max: 343980))
+20191115_1445_139-4_L_A,novel_object,q1,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191115_1445_139-4_L_A/q1.log,#KeyboardInterrupt
+20191116_1039_18-2_L_B,novel_object,q2,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191116_1039_18-2_L_B/q2.log,#ValueError: There is not part in the video where the 2 animals are visible. Try a different segmentation or check the number of animals in the video.
+20191117_1027_58-2_L_B,novel_object,q3,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191117_1027_58-2_L_B/q3.log,#ValueError: max() arg is an empty sequence
+20191117_1054_138-1_L_B,novel_object,q2,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191117_1054_138-1_L_B/q2.log,#ValueError: There is not part in the video where the 2 animals are visible. Try a different segmentation or check the number of animals in the video.
+20191117_1122_22-1_L_B,novel_object,q1,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191117_1122_22-1_L_B/q1.log,#IndexError: index 2 is out of bounds for axis 0 with size 2
+20191118_1006_32-2_R_B,novel_object,q1,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191118_1006_32-2_R_B/q1.log,#IndexError: index 2 is out of bounds for axis 0 with size 2
+20191120_1056_32-2_R_C,novel_object,q3,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191120_1056_32-2_R_C/q3.log,#KeyboardInterrupt
+20191114_1129_32-2_R_A,novel_object,q3,/hps/nobackup/birney/users/ian/MIKK_F0_tracking/logs/track_videos/novel_object/20191114_1129_32-2_R_A/q3.log,#RuntimeError: Unable to set dataset extent (dimension cannot exceed the existing maximal size (new: 343981 max: 343980))
+# These videos do not exist
+20191118_1311_80-2_L_B,novel_object,q1,NA,# Video does not exist – was prematurely stopped during data collection
+20191118_1311_80-2_L_B,novel_object,q2,NA,# Video does not exist – was prematurely stopped during data collection
+20191118_1311_80-2_L_B,novel_object,q3,NA,# Video does not exist – was prematurely stopped during data collection
+20191118_1311_80-2_L_B,novel_object,q4,NA,# Video does not exist – was prematurely stopped during data collection
+

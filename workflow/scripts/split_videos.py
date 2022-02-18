@@ -29,12 +29,12 @@ import sys
 # Get variables
 
 ## Debugging
-IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F0_tracking/raw_videos/20191111_1527_5-1_L_A.avi"
-SAMPLE = "20191111_1527_5-1_L_A"
+IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20211117_1326_R.avi"
+SAMPLE = "20211117_1326_R"
 ASSAY = "novel_object"
 QUADRANT = "q1"
 SAMPLES_FILE = "config/samples.csv"
-OUT_FILE = "/nfs/research/birney/users/ian/MIKK_F0_tracking/split/novel_object/20191111_1527_5-1_L_A_q1.mp4"
+OUT_FILE = "/nfs/research/birney/projects/indigene/MIKK_F2_tracking/split/novel_object/20211117_1326_R_q1.avi"
 
 ## True
 IN_FILE = snakemake.input[0]
@@ -64,11 +64,17 @@ elif ASSAY == "novel_object":
 # Get crop adjustment values
 
 adj_top = int(samples_df.loc[SAMPLE, "adj_top"])
-adj_bottom = int(samples_df.loc[SAMPLE, "adj_bottom"])
-adj_left = int(samples_df.loc[SAMPLE, "adj_left"])
 adj_right = int(samples_df.loc[SAMPLE, "adj_right"])
 
+# Get boundary values
+
+bleft = int(samples_df.loc[SAMPLE, "bound_left"])
+bright = int(samples_df.loc[SAMPLE, "bound_right"])
+btop = int(samples_df.loc[SAMPLE, "bound_top"])
+bbottom = int(samples_df.loc[SAMPLE, "bound_bottom"])
+
 # Read video from file
+
 cap = cv.VideoCapture(IN_FILE)
 
 # Frame width and height
@@ -77,50 +83,42 @@ wid = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
 hei = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
 # Get total frame length
+
 vid_len = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
+
 # Get frames per second
+
 fps = int(cap.get(cv.CAP_PROP_FPS))
 
 # Set adjusted midpoints
+
 mid_x = round(((wid - 1) / 2) + adj_right)
 mid_y = round(((hei - 1) / 2) + adj_top)
 
 # Get bounding box coords for target quadrant
+
 if QUADRANT == 'q1':
-    top = 0
+    top = btop
     bottom = mid_y
     left = mid_x
-    right = wid - 1
+    right = wid - bright
 elif QUADRANT == 'q2':
-    top = 0
+    top = btop
     bottom = mid_y
-    left = 0
+    left = bleft
     right = mid_x
 elif QUADRANT == 'q3':
     top = mid_y
-    bottom = hei - 1
-    left = 0
+    bottom = hei - bbottom
+    left = bleft
     right = mid_x
 elif QUADRANT == 'q4':
     top = mid_y
-    bottom = hei - 1
+    bottom = hei - bbottom
     left = mid_x
-    right = wid  - 1
+    right = wid  - bright
 else:
     print('Invalid quadrant')
-
-# Adjust for 20191111 videos (which have a black outer boundary for some reason)
-
-left_side_width = 288
-right_side_width = 290
-if date == 20191111 and QUADRANT == "q1":
-    right = wid - right_side_width
-elif date == 20191111 and QUADRANT == "q4":
-    right = wid - right_side_width
-elif date == 20191111 and QUADRANT == "q2":
-    left = left_side_width
-elif date == 20191111 and QUADRANT == "q3":
-    left = left_side_width
     
 # Get size of output video
 
@@ -128,7 +126,7 @@ size = (right - left, bottom - top)
 
 # Define the codec and create VideoWriter object
 
-fourcc = cv.VideoWriter_fourcc('m', 'p', '4', 'v')
+fourcc = cv.VideoWriter_fourcc('h', '2', '6', '4')
 out = cv.VideoWriter(OUT_FILE, fourcc, fps, size, isColor=True)
 
 # Capture frame-by-frame

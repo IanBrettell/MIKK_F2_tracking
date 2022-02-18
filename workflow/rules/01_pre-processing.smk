@@ -53,12 +53,12 @@ rule split_videos:
     input:
         rules.copy_videos.output,
     output:
-        os.path.join(config["data_store_dir"], "split/{assay}/{sample}_{quadrant}.mp4"),
+        os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}.avi"),
     log:
         os.path.join(config["working_dir"], "logs/split_videos/{assay}/{sample}/{quadrant}.log"),
     params:
-        sample = "{sample}",
         assay = "{assay}",
+        sample = "{sample}",
         quadrant = "{quadrant}",
         samples_file = lambda wildcards: config["samples_file"]
     container:

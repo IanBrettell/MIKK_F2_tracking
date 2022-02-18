@@ -65,7 +65,7 @@ rule track_videos:
     input:
         rules.split_videos.output
     output:
-        os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
+        os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
     log:
         os.path.join(config["working_dir"], "logs/track_videos/{assay}/{sample}/{quadrant}.log"),
     params:
@@ -86,6 +86,7 @@ rule track_videos:
             --_video {input} \
             --_bgsub '{params.bgsub}' \
             --_range [0,{params.vid_length}] \
+            --_nblobs 2 \
             --_intensity [{params.intensity_floor},{params.intensity_ceiling}] \
             --_area [{params.area_floor},{params.area_ceiling}] \
             --_session {params.vid_name} \
@@ -93,13 +94,52 @@ rule track_videos:
                 2> {log}
         """
 
+def get_trajectories_file(wildcards):
+    # Get path of trajectories files
+    traj_wo_gaps_file = os.path.join(
+        config["working_dir"],
+        "split/{assay}/session_{sample}_{quadrant}/trajectories_wo_gaps/trajectories_wo_gaps.npy")
+    traj_file = os.path.join(
+        config["working_dir"],
+        "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy")
+    # If there is no `trajectories_wo_gaps.npy` file, return the `trajectories.npy` file
+    if os.path.exists(traj_wo_gaps_file):
+        return(traj_wo_gaps_file)
+    else:
+        return(traj_file)
+
+# Generate videos with coloured trails superimposed
+rule coloured_trails:
+    input:
+        video_object=os.path.join(
+            config["working_dir"],
+            "split/{assay}/session_{sample}_{quadrant}/video_object.npy",
+        ),
+        trajectories=get_trajectories_file,
+    output:
+        os.path.join(
+            config["working_dir"],
+            "split/{assay}/{sample}_{quadrant}_tracked.avi",
+        ),
+    log:
+        os.path.join(
+            config["working_dir"],
+            "logs/coloured_trails/{assay}/{sample}/{quadrant}.log"
+        ),
+    container:
+        config["idtrackerai"]
+    resources:
+        mem_mb=5000,
+    script:
+        "../scripts/coloured_trails.py"
+
 # Convert numpy arrays to .csv files
 rule trajectories_to_csv:
     input:
         trajectories = rules.track_videos.output,
         script = "workflow/scripts/trajectories_to_csv.py"
     output:
-        os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv")
+        os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv")
     log:
         os.path.join(config["working_dir"], "logs/trajectories_to_csv/{assay}/{sample}/{quadrant}.log"),
     params:
@@ -111,10 +151,11 @@ rule trajectories_to_csv:
 
 def get_final_csvs(wildcards):
     # Get path of csv files
-    traj_wo_gaps_file = os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories_wo_gaps/trajectories_wo_gaps.trajectories.csv")
-    traj_file = os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv")
+    traj_wo_gaps_file = os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories_wo_gaps/trajectories_wo_gaps.trajectories.csv")
+    traj_file = os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv")
     # If there is no "without gaps" file, return the 
     if os.path.exists(traj_wo_gaps_file):
         return(traj_wo_gaps_file)
     else:
         return(traj_file)
+

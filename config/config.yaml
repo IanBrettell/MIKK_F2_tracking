@@ -4,7 +4,7 @@
 samples_file:
     config/samples.csv
 excluded_videos:
-    config/tracking_fails.csv
+    config/excluded_videos.csv
 ####################
 # Parameters
 ####################
@@ -19,7 +19,7 @@ raw_data_dir:
 working_dir:
     /hps/nobackup/birney/users/ian/MIKK_F2_tracking
 data_store_dir:
-    /nfs/research/birney/projects/indigene/MIKK_F2_tracking
+    /nfs/research/birney/users/ian/MIKK_F2_tracking
 ####################
 # Containers
 ####################

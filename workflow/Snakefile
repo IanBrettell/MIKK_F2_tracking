@@ -30,26 +30,35 @@ rule all:
 ######################
 ## 02_tracking.smk
 ######################
-# track_videos
-        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
+## track_videos
+#        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS
+#        ),
+## coloured_trails
+#        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}_tracked.avi"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS
+#        ),
+## trajectories_to_csv
+#        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS
+#        ),
+# assign_ref_test
+        expand(os.path.join(
+            config["data_store_dir"],
+            "final_tracks/{assay}/{sample}_{quadrant}.csv"),
                 zip,
-                assay = ASSAYS,
-                sample = SAMPLES,
-                quadrant = QUADRANTS
-        ),
-# coloured_trails
-        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}_tracked.avi"),
-                zip,
-                assay = ASSAYS,
-                sample = SAMPLES,
-                quadrant = QUADRANTS
-        ),
-# trajectories_to_csv
-        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv"),
-                zip,
-                assay = ASSAYS,
-                sample = SAMPLES,
-                quadrant = QUADRANTS         
+                assay = ASSAYS[0],
+                sample = SAMPLES[0],
+                quadrant = QUADRANTS[0]               
         ),
 
 #####################
@@ -58,3 +67,4 @@ rule all:
 
 include: "rules/01_pre-processing.smk"
 include: "rules/02_tracking.smk"
+include: "rules/03_qc.smk"

@@ -12,3 +12,8 @@ track_videos:
   memory: "{resources.mem_mb}"
 coloured_trails:
   memory: "{resources.mem_mb}"
+trajectories_to_csv:
+  memory: "{resources.mem_mb}"
+# 03_qc.smk
+assign_ref_test:
+  memory: "{resources.mem_mb}"  

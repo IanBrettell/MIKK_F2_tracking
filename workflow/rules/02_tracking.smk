@@ -143,19 +143,14 @@ rule trajectories_to_csv:
     log:
         os.path.join(config["working_dir"], "logs/trajectories_to_csv/{assay}/{sample}/{quadrant}.log"),
     params:
-        in_path = os.path.join(config["data_store_dir"], "split/{assay}/session_{sample}_{quadrant}")
+        in_path = os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}")
+    resources:
+        mem_mb = 100,
     shell:
         """
-        python {input.script} {params.in_path}
+        python {input.script} {params.in_path} \
+            2> {log}
         """
 
-def get_final_csvs(wildcards):
-    # Get path of csv files
-    traj_wo_gaps_file = os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories_wo_gaps/trajectories_wo_gaps.trajectories.csv")
-    traj_file = os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv")
-    # If there is no "without gaps" file, return the 
-    if os.path.exists(traj_wo_gaps_file):
-        return(traj_wo_gaps_file)
-    else:
-        return(traj_file)
+
 

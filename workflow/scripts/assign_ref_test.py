@@ -21,13 +21,12 @@ sys.excepthook = handle_exception
 # Import libraries
 
 import pandas as pd
-import numpy as np
 
 # Get variables
 
 ## Debug
-IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split/novel_object/session_20211118_1110_R_q3/trajectories/trajectories.trajectories.csv"
-REF_LOC = "Left"
+IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split/novel_object/session_20211220_1527_R_q4/trajectories_wo_gaps/trajectories_wo_gaps.trajectories.csv"
+REF_LOC = "Top"
 FPS = 30
 OUT_FILE = "/nfs/research/birney/users/ian/MIKK_F2_tracking/novel_object/20211118_1110_R_q3.csv"
 
@@ -47,7 +46,7 @@ df.rename(columns = {'# x1':'x1'}, inplace = True)
 
 # Remove NaNs (so that the first row isn't empty)
 
-df_complete = df.dropna()
+df_complete = df.dropna().reset_index()
 
 # Get column name matching REF location
 
@@ -59,7 +58,8 @@ if REF_LOC == "Left" or "Right":
         ref_col = target.idxmin()
     elif REF_LOC == "Right":
         ref_col = target.idxmax()
-elif REF_LOC == "Top" or "Bottom":
+
+if REF_LOC == "Top" or "Bottom":
     # Pull out first row
     target = df_complete.loc[0,['y1', 'y2']]
     # Get column name with min or max value based on REF location
@@ -79,7 +79,7 @@ elif ref_col[1] == '2':
 
 df_final = df.copy()
 df_final['frame'] = [i for i in range(1,len(df) + 1)]
-df_final['seconds'] = df['frame'] / FPS
+df_final['seconds'] = df_final['frame'] / FPS
 
 # Filter for frames up to 10 minutes
 
@@ -91,4 +91,4 @@ df_final = df_final[['frame', 'seconds', 'ref_x', 'ref_y', 'test_x', 'test_y']]
 
 # Write to file
 
-df_final.to_csv(OUT_FILE)    
+df_final.to_csv(OUT_FILE, index = False)    

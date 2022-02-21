@@ -16,4 +16,6 @@ trajectories_to_csv:
   memory: "{resources.mem_mb}"
 # 03_qc.smk
 assign_ref_test:
+  memory: "{resources.mem_mb}"
+tracking_success:
   memory: "{resources.mem_mb}"  

@@ -51,15 +51,17 @@ rule all:
 #                sample = SAMPLES,
 #                quadrant = QUADRANTS
 #        ),
-# assign_ref_test
-        expand(os.path.join(
-            config["data_store_dir"],
-            "final_tracks/{assay}/{sample}_{quadrant}.csv"),
-                zip,
-                assay = ASSAYS[0],
-                sample = SAMPLES[0],
-                quadrant = QUADRANTS[0]               
-        ),
+## assign_ref_test
+#        expand(os.path.join(
+#            config["data_store_dir"],
+#            "final_tracks/{assay}/{sample}_{quadrant}.csv"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS         
+#        ),
+# tracking_success
+        "config/tracking_success.csv",
 
 #####################
 

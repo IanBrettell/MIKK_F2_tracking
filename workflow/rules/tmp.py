@@ -14,8 +14,11 @@ def get_final_csvs():
     else:
         return(traj_file)
 
+samples_df = pd.read_csv("config/samples.csv", comment = '#')
+
+
 def get_ref_loc():
-        target_col = "cab_coords_" + "of_" + "q4"
-        ref_loc = samples_df.loc[samples_df["sample"] == "20211201_1414_R", target_col]
+    target_col = "cab_coords_" + "of_" + "q4"
+    ref_loc = samples_df.loc[samples_df["sample"] == "20211201_1414_R", target_col]
 #    ref_loc = ref_loc.to_string()
     return(ref_loc)

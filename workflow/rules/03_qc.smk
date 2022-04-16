@@ -1,6 +1,5 @@
 # Choose input trajectories .csv file
 def get_final_csvs(wildcards):
-    #from pathlib import Path
     # Get path of csv files
     ## Trajectories without gaps
     traj_wo_gaps_file = os.path.join(
@@ -60,7 +59,7 @@ rule assign_ref_test:
         fps = get_fps,
         ref_loc = get_ref_loc,
     resources:
-        mem_mb = 500
+        mem_mb = 200
     script:
         "../scripts/assign_ref_test.py"
     
@@ -86,4 +85,56 @@ rule tracking_success:
         mem_mb = 1000
     script:
         "../scripts/tracking_success.R"
+
+# Function to pull trajectories.npy if trajectories_wo_gaps.npy does not exist
+def get_trajectories_file(wildcards):
+    # Get path of csv files
+    ## Trajectories without gaps
+    traj_wo_gaps_file = os.path.join(
+        config["working_dir"],
+        "split",
+        wildcards.assay,
+        "session_" + wildcards.sample + "_" + wildcards.quadrant,
+        "trajectories_wo_gaps",
+        "trajectories_wo_gaps.npy"
+        )
+    ## Trajectories (with gaps)
+    traj_file = os.path.join(
+        config["working_dir"],
+        "split",
+        wildcards.assay,
+        "session_" + wildcards.sample + "_" + wildcards.quadrant,
+        "trajectories",
+        "trajectories.npy"
+        )
+    # If there is no "without gaps" file, return the "trajectories" file
+    if os.path.exists(traj_wo_gaps_file):
+        return(traj_wo_gaps_file)
+    elif os.path.exists(traj_file):
+        return(traj_file)
+
+# Generate videos with coloured trails superimposed
+rule coloured_trails:
+    input:
+        video_object=os.path.join(
+            config["working_dir"],
+            "split/{assay}/session_{sample}_{quadrant}/video_object.npy",
+        ),
+        trajectories=get_trajectories_file,
+    output:
+        os.path.join(
+            config["working_dir"],
+            "split/{assay}/{sample}_{quadrant}_tracked.avi",
+        ),
+    log:
+        os.path.join(
+            config["working_dir"],
+            "logs/coloured_trails/{assay}/{sample}/{quadrant}.log"
+        ),
+    container:
+        config["idtrackerai"]
+    resources:
+        mem_mb=5000,
+    script:
+        "../scripts/coloured_trails.py"
     

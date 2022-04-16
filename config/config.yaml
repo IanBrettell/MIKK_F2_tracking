@@ -23,8 +23,8 @@ data_store_dir:
 ####################
 # Containers
 ####################
-ffmpeg:
-    docker://jrottenberg/ffmpeg:4.4-ubuntu
+#ffmpeg:
+#    docker://jrottenberg/ffmpeg:4.4-ubuntu
 opencv:
     /hps/nobackup/birney/users/ian/containers/MIKK_F0_tracking/opencv_4.5.1.sif
 idtrackerai:

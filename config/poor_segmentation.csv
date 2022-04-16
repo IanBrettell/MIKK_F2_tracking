@@ -1,4 +1,8 @@
 sample,assay,notes
 20211201_1500_R_q1,novel_object,impossible to segment fish at beginning of video
+20211203_0937_R_q1,novel_object,MIKK fish remains very still (creating a ghost) and then moves close to the novel object
+20211207_1439_R_q4,novel_object,MIKK fish remains very still so the best segmentation is still messy and fuzzy
 20211210_1346_R_q2,novel_object,MIKK fish remains still by wall and iCab swims behind novel object making it impossible to segment both
 20211213_1353_R_q2,novel_object,MIKK fish remains behind the barrier for some time
+20211221_1356_R_q1,novel_object,MIKK fish remains still for most of the video which creates a "ghost" for the final 1/3 of the movie
+20211222_0946_R_q1,novel_object,MIKK fish behind the novel object for some time

@@ -1,4 +1,7 @@
 include: "rules/00_common.smk"
+include: "rules/01_pre-processing.smk"
+include: "rules/02_tracking.smk"
+include: "rules/03_qc.smk"
 
 ##### Target rules #####
 
@@ -11,8 +14,15 @@ rule all:
 #        expand(os.path.join(config["working_dir"], "raw_videos/{sample}.avi"),
 #                sample = SAMPLES
 #        ),
+        rules.get_fps.output.csv,
 ## decompress_videos
 #        expand(os.path.join(config["working_dir"], "decompressed/{sample}.avi"),
+#                sample = SAMPLES
+#        ),
+## recode_videos
+#        expand(os.path.join(
+#            config["working_dir"],
+#            "recoded/{sample}.avi"),
 #                sample = SAMPLES
 #        ),
 ## set_split_coords
@@ -21,11 +31,14 @@ rule all:
 #                sample = SAMPLES
 #        ),
 ## split_videos
-#        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}.avi"),
-#                zip,
-#                assay = ASSAYS,
-#                sample = SAMPLES,
-#                quadrant = QUADRANTS
+#        expand(os.path.join(
+#                config["working_dir"],
+#                "split/{assay}/{sample}_{quadrant}.avi"
+#                ),
+#                  zip,
+#                  assay = ASSAYS,
+#                  sample = SAMPLES,
+#                  quadrant = QUADRANTS
 #        ),
 ######################
 ## 02_tracking.smk
@@ -60,13 +73,8 @@ rule all:
 #                sample = SAMPLES,
 #                quadrant = QUADRANTS         
 #        ),
-# tracking_success
-        "config/tracking_success.csv",
+## tracking_success
+#        "config/tracking_success.csv",
 
 #####################
 
-##### Modules #####
-
-include: "rules/01_pre-processing.smk"
-include: "rules/02_tracking.smk"
-include: "rules/03_qc.smk"

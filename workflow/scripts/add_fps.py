@@ -21,33 +21,50 @@ sys.excepthook = handle_exception
 # Import libraries
 
 import cv2 as cv
+import pandas as pd
 
 # Get variables
 
 ## Debug
-#IN = ["/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20211117_1326_R.avi",
+#IN_VIDS = ["/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20211117_1326_R.avi",
 #      "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20220405_1005_R.avi",
 #      "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20220323_1421_L.avi"]
+#SAMPLES_CONV = "config/samples_converted.csv"
 
 ## True
-IN = snakemake.input
+IN_VIDS = snakemake.input.videos
+SAMPLES_CONV = snakemake.input.samples_file[0]
 OUT = snakemake.output[0]
 
 # Sort file names
 
-IN = sorted(IN)
+IN_VIDS = sorted(IN_VIDS)
 
-# Write lines to file and close
+# Create DF with FPS and sample name
 
-file = open(OUT, 'w')
-
-for VID in IN:
+FPS = []
+VIDEOS = []
+for VID in IN_VIDS:
     cap = cv.VideoCapture(VID)
     fps = str(int(cap.get(cv.CAP_PROP_FPS)))
-    sample = os.path.basename(VID).replace('.avi', '')
-    file.writelines(sample + ',' + fps + '\n')
+    video = os.path.basename(VID)
+    # add to lists
+    FPS.append(fps)
+    VIDEOS.append(video)
 
-file.close()
+fps_df = pd.DataFrame({
+    'fps' : FPS,
+    'movie_name' : VIDEOS
+})
+
+# Read in converted metadata
+meta_df = pd.read_csv(SAMPLES_CONV)
+
+out = meta_df.set_index('movie_name').join(fps_df.set_index('movie_name'))
+
+# Write to file
+
+out.to_csv(OUT)
 
 
 

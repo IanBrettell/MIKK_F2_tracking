@@ -1,30 +1,26 @@
-include: "rules/00_common.smk"
+include: "rules/00_1_prep_samples_file.smk"
 include: "rules/01_pre-processing.smk"
-include: "rules/02_tracking.smk"
-include: "rules/03_qc.smk"
+#include: "rules/02_tracking.smk"
+#include: "rules/03_qc.smk"
 
 ##### Target rules #####
 
 rule all:
     input:
 ######################
+## 00_common.smk
+######################
+        #rules.convert_metadata.output,
+######################
 ## 01_pre-processing.smk
 ######################
-## copy_videos
-#        expand(os.path.join(config["working_dir"], "raw_videos/{sample}.avi"),
-#                sample = SAMPLES
-#        ),
-        rules.get_fps.output.csv,
-## decompress_videos
-#        expand(os.path.join(config["working_dir"], "decompressed/{sample}.avi"),
-#                sample = SAMPLES
-#        ),
-## recode_videos
-#        expand(os.path.join(
-#            config["working_dir"],
-#            "recoded/{sample}.avi"),
-#                sample = SAMPLES
-#        ),
+        #expand(rules.copy_videos.output,
+        #        video = VIDEOS
+        #),
+        #rules.add_fps.output.csv,
+        expand(rules.recode_videos.output,
+                video = VIDEOS
+        ),
 ## set_split_coords
 #        expand("results/split_coord_images/{assay}/{sample}.png",
 #                assay = ASSAYS,

@@ -23,31 +23,31 @@ sys.excepthook = handle_exception
 import pandas as pd
 import numpy as np
 import cv2 as cv
-import os
-import sys
+#import os
+#import sys
 
 # Get variables
 
 ## Debugging
 IN_FILE = "/nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/all_F2/20211117_1326_R.avi"
-SAMPLE = "20211117_1326_R"
-SAMPLES_FILE = "config/samples.csv"
-OUT_TEST = "results/test.png"
+#MOVIE = "20211117_1326_R"
+#SAMPLES_FILE = "config/samples.csv"
+#OUT_TEST = "results/test.png"
 OUT_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/recoded/20211117_1326_R.avi"
 
 ## True
 IN_FILE = snakemake.input[0]
-SAMPLE = snakemake.params.sample
-SAMPLES_FILE = snakemake.params.samples_file
+#MOVIE = snakemake.params.sample
+#SAMPLES_FILE = snakemake.params.samples_file
 OUT_FILE = snakemake.output[0]
 
 # Read samples_file
 
-samples_df = pd.read_csv(SAMPLES_FILE, comment="#", skip_blank_lines=True, index_col=0)
+#samples_df = pd.read_csv(SAMPLES_FILE, comment="#", skip_blank_lines=True, index_col=0)
 
 # Get tank side
 
-tank_side = samples_df.loc[SAMPLE, "tank_side"]
+#tank_side = samples_df.loc[MOVIE, "tank_side"]
 
 # Read video from file
 

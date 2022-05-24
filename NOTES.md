@@ -1,3 +1,20 @@
+# Notes
+
+## 9 May 2022
+
+Alicia sent through final metadata and videos:
+
+`config/20220509 New Fish Movies.xlsx`
+
+69 total videos. 271 pairs.
+
+Some values in the `movie name` needed to be amended manually.
+
+- 20220322_1011_R.avi and 20220322_1014_L.avi have swapped tank sides
+
+
+Converted to .csv in `rule: convert_metadata`
+
 ## 14 April 2022
 
 Alicia sent through updated metadata and new videos:

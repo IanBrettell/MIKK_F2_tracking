@@ -27,8 +27,10 @@ snakemake \
   --rerun-incomplete \
   --use-conda \
   --use-singularity \
+  --restart-times 0 \
   -s workflow/Snakefile \
   -p
+
 # When wanting to restart tracking job with more memory (includes --restart-times flag)
 snakemake \
   --jobs 5000 \
@@ -80,14 +82,15 @@ singularity build --remote \
 ####################
 
 ssh proxy-codon
-bsub -q datamover -M 50000 -Is bash
+bsub -M 50000 -Is bash
+cd /hps/software/users/birney/ian/repos/MIKK_F2_tracking
 module load singularity-3.7.0-gcc-9.3.0-dp5ffrp
-RCONT=/hps/nobackup/birney/users/ian/containers/MIKK_F0_tracking/R_4.1.2.sif
+RCONT=/hps/nobackup/birney/users/ian/containers/MIKK_F2_tracking/R_4.1.2.sif
 singularity shell --bind /hps/nobackup/birney/users/ian/rstudio_db:/var/lib/rstudio-server \
                   --bind /hps/nobackup/birney/users/ian/tmp:/tmp \
                   --bind /hps/nobackup/birney/users/ian/run:/run \
-                  $CONT
-
+                  $RCONT
+rstudio-server kill-all
 rserver \
     --rsession-config-file /hps/software/users/birney/ian/repos/MIKK_F0_tracking/workflow/envs/rsession.conf \
     --server-user brettell
@@ -130,8 +133,11 @@ idtrackerai terminal_mode \
             --exec track_video 
 
 ####################
-# Copy videos from cluster to local
+# Copy videos within cluster and to local
 ####################
+
+# Copy all videos in subfolders to single folder
+cp /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/202*/* /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/all_F2/
 
 # To set tracking parameters
 rsync -aP brettell@codon:/nfs/research/birney/users/ian/MIKK_F2_tracking/split ~/Desktop/MIKK_videos

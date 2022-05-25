@@ -14,7 +14,6 @@ import itertools
 configfile: "config/config.yaml"
 
 
-
 # Convert raw .xlsx metadata into .csv samples file
 rule convert_metadata:
     input:

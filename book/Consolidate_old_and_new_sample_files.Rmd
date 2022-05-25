@@ -1,0 +1,209 @@
+# Adding old parameters to new file
+
+```{r}
+library(tidyverse)
+
+NEW = here::here("config/samples.csv")
+OLD = here::here("config/samples_old.csv")
+
+# Read in 
+
+new = readr::read_csv(NEW)
+old = readr::read_csv(OLD) %>% 
+  dplyr::mutate(movie_name = paste(sample, ".avi", sep = "")) 
+
+# BGsub
+old_bgsub = old %>% 
+  dplyr::select(movie_name,
+                of_q1 = bgsub_of_q1,
+                of_q2 = bgsub_of_q2,
+                of_q3 = bgsub_of_q3,
+                of_q4 = bgsub_of_q4,
+                no_q1 = bgsub_no_q1,
+                no_q2 = bgsub_no_q2,
+                no_q3 = bgsub_no_q3,
+                no_q4 = bgsub_no_q4) %>% 
+  tidyr::pivot_longer(cols = c("of_q1",
+                               "of_q2",
+                               "of_q3",
+                               "of_q4",
+                               "no_q1",
+                               "no_q2",
+                               "no_q3",
+                               "no_q4",
+                               ),
+                      names_to = c("assay", "quadrant"),
+                      names_sep = "_",
+                      values_to = "bgsub")
+
+# Intensity
+old_intensity = readr::read_csv(OLD) %>% 
+  dplyr::mutate(movie_name = paste(sample, ".avi", sep = "")) %>% 
+  dplyr::select(movie_name,
+                intensity_floor_of_q1,
+                intensity_floor_of_q2,
+                intensity_floor_of_q3,
+                intensity_floor_of_q4,
+                intensity_floor_no_q1,
+                intensity_floor_no_q2,
+                intensity_floor_no_q3,
+                intensity_floor_no_q4,
+                intensity_ceiling_of_q1,
+                intensity_ceiling_of_q2,
+                intensity_ceiling_of_q3,
+                intensity_ceiling_of_q4,
+                intensity_ceiling_no_q1,
+                intensity_ceiling_no_q2,
+                intensity_ceiling_no_q3,
+                intensity_ceiling_no_q4,) %>% 
+  tidyr::pivot_longer(cols = c("intensity_floor_of_q1",
+                               "intensity_floor_of_q2",
+                               "intensity_floor_of_q3",
+                               "intensity_floor_of_q4",
+                               "intensity_floor_no_q1",
+                               "intensity_floor_no_q2",
+                               "intensity_floor_no_q3",
+                               "intensity_floor_no_q4",
+                               "intensity_ceiling_of_q1",
+                               "intensity_ceiling_of_q2",
+                               "intensity_ceiling_of_q3",
+                               "intensity_ceiling_of_q4",
+                               "intensity_ceiling_no_q1",
+                               "intensity_ceiling_no_q2",
+                               "intensity_ceiling_no_q3",
+                               "intensity_ceiling_no_q4"),
+                      names_to = c(NA, ".value", "assay", "quadrant"),
+                      names_sep = "_") %>% 
+  dplyr::rename(int_floor = floor,
+                int_celing = ceiling)
+
+
+
+old_area = readr::read_csv(OLD) %>% 
+  dplyr::mutate(movie_name = paste(sample, ".avi", sep = "")) %>% 
+  dplyr::select(movie_name,
+                area_floor_of_q1,
+                area_floor_of_q2,
+                area_floor_of_q3,
+                area_floor_of_q4,
+                area_floor_no_q1,
+                area_floor_no_q2,
+                area_floor_no_q3,
+                area_floor_no_q4,
+                area_ceiling_of_q1,
+                area_ceiling_of_q2,
+                area_ceiling_of_q3,
+                area_ceiling_of_q4,
+                area_ceiling_no_q1,
+                area_ceiling_no_q2,
+                area_ceiling_no_q3,
+                area_ceiling_no_q4,) %>% 
+  tidyr::pivot_longer(cols = c("area_floor_of_q1",
+                               "area_floor_of_q2",
+                               "area_floor_of_q3",
+                               "area_floor_of_q4",
+                               "area_floor_no_q1",
+                               "area_floor_no_q2",
+                               "area_floor_no_q3",
+                               "area_floor_no_q4",
+                               "area_ceiling_of_q1",
+                               "area_ceiling_of_q2",
+                               "area_ceiling_of_q3",
+                               "area_ceiling_of_q4",
+                               "area_ceiling_no_q1",
+                               "area_ceiling_no_q2",
+                               "area_ceiling_no_q3",
+                               "area_ceiling_no_q4"),
+                      names_to = c(NA, ".value", "assay", "quadrant"),
+                      names_sep = "_") %>% 
+  dplyr::rename(area_floor = floor,
+                area_ceiling = ceiling)
+
+old_cab_coords= readr::read_csv(OLD) %>% 
+  dplyr::mutate(movie_name = paste(sample, ".avi", sep = "")) %>% 
+  dplyr::select(movie_name,
+                cab_coords_of_q1,
+                cab_coords_of_q2,
+                cab_coords_of_q3,
+                cab_coords_of_q4,
+                cab_coords_no_q1,
+                cab_coords_no_q2,
+                cab_coords_no_q3,
+                cab_coords_no_q4) %>% 
+  tidyr::pivot_longer(cols = c("cab_coords_of_q1",
+                               "cab_coords_of_q2",
+                               "cab_coords_of_q3",
+                               "cab_coords_of_q4",
+                               "cab_coords_no_q1",
+                               "cab_coords_no_q2",
+                               "cab_coords_no_q3",
+                               "cab_coords_no_q4"),
+                      names_to = c(NA, ".value", "assay", "quadrant"),
+                      names_sep = "_") %>% 
+  dplyr::rename(cab_coords = coords)
+
+# Get start and end
+old_start_end = readr::read_csv(OLD) %>% 
+  dplyr::select(movie_name,
+                of_start,
+                of_end,
+                no_start,
+                no_end) %>% 
+  tidyr::pivot_longer(cols = c("of_start",
+                               "of_end",
+                               "no_start",
+                               "no_end"),
+                      names_to = c("assay", ".value"),
+                      names_sep = "_",
+                      values_to = c("start_end", "value")) %>% 
+  dplyr::rename(frame_start = start,
+                frame_end = end) %>% 
+  dplyr::distinct(movie_name, assay, frame_start, frame_end)
+
+# Get adjustments
+old_adj = old %>% 
+  dplyr::select(movie_name,
+                adj_top,
+                adj_right,
+                bound_left,
+                bound_right,
+                bound_top,
+                bound_bottom) 
+
+# Join all
+
+out = new %>% 
+  left_join(old_adj,
+            by = "movie_name") %>% 
+  left_join(old_bgsub,
+            by = c("movie_name", "quadrant")) %>% 
+  left_join(old_start_end,
+          by = c("movie_name", "assay")) %>% 
+  left_join(old_intensity,
+            by = c("movie_name", "quadrant", "assay")) %>% 
+  left_join(old_area,
+            by = c("movie_name", "quadrant", "assay")) %>%
+  left_join(old_cab_coords,
+            by = c("movie_name", "quadrant", "assay")) %>% 
+  # recode OF and NO
+  dplyr::mutate(assay = dplyr::recode(assay, 
+                                      "of" = "open_field",
+                                      "no" = "novel_object"),
+                assay = factor(assay, levels = c("open_field", "novel_object"))) %>% 
+  # recode bgsub
+  dplyr::mutate(bgsub = as.character(bgsub),
+                bgsub = dplyr::recode(bgsub,
+                                      "TRUE" = "True",
+                                      "FALSE" = "False")) %>% 
+  # arrange
+  dplyr::arrange(date,
+                 time,
+                 assay,
+                 quadrant,
+                 ) 
+
+# Write to file
+
+readr::write_csv(out, here::here("config/samples_long.csv"))
+```
+

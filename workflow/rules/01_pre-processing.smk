@@ -20,7 +20,7 @@ rule recode_videos:
     container:
         config["opencv"]
     resources:
-        mem_mb = 1000
+        mem_mb = 2000
     script:
         "../scripts/recode_videos.py"
 

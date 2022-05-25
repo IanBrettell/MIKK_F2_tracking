@@ -1,5 +1,12 @@
 # Notes
 
+## 10 May 2022
+
+Converted old samples file to new long style. 
+
+Workbook: `book/Consolidate_old_and_new_sample_files.Rmd`
+Output: `config/samples_long.csv`
+
 ## 9 May 2022
 
 Alicia sent through final metadata and videos:

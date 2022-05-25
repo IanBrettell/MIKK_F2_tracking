@@ -92,7 +92,7 @@ singularity shell --bind /hps/nobackup/birney/users/ian/rstudio_db:/var/lib/rstu
                   $RCONT
 rstudio-server kill-all
 rserver \
-    --rsession-config-file /hps/software/users/birney/ian/repos/MIKK_F0_tracking/workflow/envs/rsession.conf \
+    --rsession-config-file /hps/software/users/birney/ian/repos/MIKK_F2_tracking/workflow/envs/R_4.1.2/rsession.conf \
     --server-user brettell
 
 ssh -L 8787:hl-codon-37-04:8787 proxy-codon

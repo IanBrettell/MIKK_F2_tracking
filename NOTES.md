@@ -1,5 +1,9 @@
 # Notes
 
+## 27 May 2022
+
+New videos start from 20220321_0959
+
 ## 10 May 2022
 
 Converted old samples file to new long style. 

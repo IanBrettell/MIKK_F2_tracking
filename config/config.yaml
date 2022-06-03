@@ -3,6 +3,8 @@
 ####################
 raw_metadata:
     config/20220509_New_Fish_Movies.xlsx
+samples_long:
+    config/samples_long.csv
 samples_file:
     config/samples.csv
 excluded_videos:

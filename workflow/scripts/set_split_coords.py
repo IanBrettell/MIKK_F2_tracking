@@ -27,36 +27,38 @@ import os
 # Get variables
 
 ## Debugging
-IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20211117_1326_R.avi"
-SAMPLES_FILE = "config/samples.csv"
-ASSAY = "novel_object"
-SAMPLE = "20211117_1326_R"
-OUT_FILE = "results/split_coord_images/novel_object/20211117_1326_R.png"
+IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/recoded/20211117_1326_R.avi"
+SAMPLES_FILE = "config/samples_long.csv"
+ASSAY = "open_field"
+VIDEO = "20211117_1326_R"
 
 ## True
 IN_FILE = snakemake.input.video[0]
 SAMPLES_FILE = snakemake.params.samples_file
 ASSAY = snakemake.params.assay
-SAMPLE = snakemake.params.sample
+VIDEO = snakemake.params.video
 OUT_FILE = snakemake.output.fig
 
 # Read samples_file
-samples_df = pd.read_csv(SAMPLES_FILE, comment="#", skip_blank_lines=True, index_col=0)
+samples_df = pd.read_csv(SAMPLES_FILE)
 
-# Get date
-date = int(samples_df.loc[SAMPLE, "date"])
+# Get movie name
 
-# Get start frame
-if ASSAY == "open_field":
-    start = int(samples_df.loc[SAMPLE, "of_start"])
-elif ASSAY == "novel_object":
-    start = int(samples_df.loc[SAMPLE, "no_start"])
+MOVIE_NAME = VIDEO + ".avi"
 
-# Get crop adjustment values
-## note: Negative values for `top` shift boundary up
-## note: Negative values for `right` shift boundary left
-adj_top = int(samples_df.loc[SAMPLE, "adj_top"])
-adj_right = int(samples_df.loc[SAMPLE, "adj_right"])
+# Get target rows
+
+rows = samples_df[
+    (samples_df['movie_name'] == MOVIE_NAME) & \
+    (samples_df['assay'] == ASSAY)
+]
+
+# Get start frame and crop adjustment values
+## note: Negative values for top/bottom shift boundary up
+## note: Negative values for left/right shift boundary left
+start = int(rows['frame_start'].max())
+adj_top = int(rows['adj_top'].max())
+adj_right = int(rows['adj_right'].max())
 
 # Read video from file
 cap = cv.VideoCapture(IN_FILE)
@@ -65,35 +67,35 @@ cap = cv.VideoCapture(IN_FILE)
 wid = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
 hei = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
-# Set adjusted midpoints
+# Set adjusted midpoints
 mid_x = round(((wid - 1) / 2) + adj_right)
 mid_y = round(((hei - 1) / 2) + adj_top)
 
 # Capture start frame
 cap.set(cv.CAP_PROP_POS_FRAMES, start)
 
-# Read frame
+# Read frame
 ret, frame = cap.read()
 
 # Add vertical line 
 start_point = (mid_x, 0)
 end_point = (mid_x, hei)
-color = (255,0,0)
+color = (62,90,248)
 thickness = 1
 frame = cv.line(frame, start_point, end_point, color, thickness)
 
 # Add horizontal line
 start_point = (0, mid_y)
 end_point = (wid, mid_y)
-color = (255,0,0)
+color = (62,90,248)
 thickness = 1
 frame = cv.line(frame, start_point, end_point, color, thickness)
 
 # Get width of boundaries in pixels
-bleft = int(samples_df.loc[SAMPLE, "bound_left"])
-bright = int(samples_df.loc[SAMPLE, "bound_right"])
-btop = int(samples_df.loc[SAMPLE, "bound_top"])
-bbottom = int(samples_df.loc[SAMPLE, "bound_bottom"])
+bleft = int(rows["bound_left"].max())
+bright = int(rows["bound_right"].max())
+btop = int(rows["bound_top"].max())
+bbottom = int(rows["bound_bottom"].max())
 
 # Get line coordinates
 left_start = (bleft, 0)

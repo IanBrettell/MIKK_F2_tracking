@@ -1,6 +1,6 @@
-include: "rules/00_1_prep_samples_file.smk"
+include: "rules/00_common.smk"
 include: "rules/01_pre-processing.smk"
-#include: "rules/02_tracking.smk"
+include: "rules/02_tracking.smk"
 #include: "rules/03_qc.smk"
 
 ##### Target rules #####
@@ -14,38 +14,32 @@ rule all:
 ######################
 ## 01_pre-processing.smk
 ######################
-        #expand(rules.copy_videos.output,
-        #        video = VIDEOS
-        #),
-        #rules.add_fps.output.csv,
+        expand(rules.copy_videos.output,
+                video = VIDEOS
+        ),
+        rules.add_fps.output.csv,
         expand(rules.recode_videos.output,
                 video = VIDEOS
         ),
-## set_split_coords
-#        expand("results/split_coord_images/{assay}/{sample}.png",
-#                assay = ASSAYS,
-#                sample = SAMPLES
-#        ),
-## split_videos
-#        expand(os.path.join(
-#                config["working_dir"],
-#                "split/{assay}/{sample}_{quadrant}.avi"
-#                ),
-#                  zip,
-#                  assay = ASSAYS,
-#                  sample = SAMPLES,
-#                  quadrant = QUADRANTS
-#        ),
+        expand(rules.set_split_coords.output,
+                assay = ASSAYS,
+                video = VIDEOS
+        ),
+        expand(rules.split_videos.output,
+                zip,
+                assay = ASSAYS_ZIP,
+                video = VIDEOS_ZIP,
+                sample = SAMPLES_ZIP,
+        ),
 ######################
 ## 02_tracking.smk
 ######################
-## track_videos
-#        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
-#                zip,
-#                assay = ASSAYS,
-#                sample = SAMPLES,
-#                quadrant = QUADRANTS
-#        ),
+        expand(rules.track_videos.output,
+                zip,
+                assay = ASSAYS_ZIP_EX,
+                video = VIDEOS_ZIP_EX,
+                sample = SAMPLES_ZIP_EX,
+        ),
 ## coloured_trails
 #        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}_tracked.avi"),
 #                zip,

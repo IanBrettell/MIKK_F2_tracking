@@ -11,7 +11,7 @@ cp /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/2021*/* /nfs/ftp/p
 
 ssh codon
 module load singularity-3.7.0-gcc-9.3.0-dp5ffrp
-bsub -M 20000 -Is bash
+bsub -Is bash
 # If needing to copy videos from FTP (rule copy_videos),
 # Need to use the datamover queue so that it can see the FTP drive:
 # bsub -M 20000 -q datamover -Is bash
@@ -140,4 +140,9 @@ idtrackerai terminal_mode \
 cp /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/202*/* /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/all_F2/
 
 # To set tracking parameters
-rsync -aP brettell@codon:/nfs/research/birney/users/ian/MIKK_F2_tracking/split ~/Desktop/MIKK_videos
+## Recoded
+rsync -aP brettell@codon:/hps/nobackup/birney/users/ian/MIKK_F2_tracking/recoded ~/Desktop/MIKK_videos
+## Split
+rsync -aP brettell@codon:/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split ~/Desktop/MIKK_videos
+## After tracking, to exclude copying idtrackerai files
+rsync -aP -m --exclude "*/*/session*" --include "*/*/*.avi" brettell@codon:/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split ~/Downloads/PHD\ videos/MIKK_F2

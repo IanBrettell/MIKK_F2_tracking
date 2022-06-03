@@ -29,12 +29,12 @@ import sys
 # Get variables
 
 ## Debugging
-IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20211117_1326_R.avi"
-SAMPLE = "20211117_1326_R"
-ASSAY = "novel_object"
-QUADRANT = "q1"
-SAMPLES_FILE = "config/samples.csv"
-OUT_FILE = "/nfs/research/birney/projects/indigene/MIKK_F2_tracking/split/novel_object/20211117_1326_R_q1.avi"
+IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/raw_videos/20220427_0951_R.avi"
+SAMPLE = "20220427_0951_18-2_21-2_R_q4"
+ASSAY = "open_field"
+QUADRANT = "q4"
+SAMPLES_FILE = "config/samples_long.csv"
+OUT_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split/open_field/20220427_0951_R/20220427_0951_18-2_21-2_R_q4.avi"
 
 ## True
 IN_FILE = snakemake.input[0]
@@ -46,32 +46,31 @@ OUT_FILE = snakemake.output[0]
 
 # Read samples_file
 
-samples_df = pd.read_csv(SAMPLES_FILE, comment="#", skip_blank_lines=True, index_col=0)
+samples_df = pd.read_csv(SAMPLES_FILE)
 
-# Get date
+# Get target row
 
-date = int(samples_df.loc[SAMPLE, "date"])
+row = samples_df[
+    (samples_df['sample'] == SAMPLE) & \
+    (samples_df['assay'] == ASSAY)
+]
 
 # Get start and end frames
 
-if ASSAY == "open_field":
-    start = int(samples_df.loc[SAMPLE, "of_start"])
-    end = int(samples_df.loc[SAMPLE, "of_end"])
-elif ASSAY == "novel_object":
-    start = int(samples_df.loc[SAMPLE, "no_start"])
-    end = int(samples_df.loc[SAMPLE, "no_end"])
+start = int(row['frame_start'])
+end = int(row['frame_end'])
 
 # Get crop adjustment values
 
-adj_top = int(samples_df.loc[SAMPLE, "adj_top"])
-adj_right = int(samples_df.loc[SAMPLE, "adj_right"])
+adj_top = int(row['adj_top'])
+adj_right = int(row['adj_right'])
 
 # Get boundary values
 
-bleft = int(samples_df.loc[SAMPLE, "bound_left"])
-bright = int(samples_df.loc[SAMPLE, "bound_right"])
-btop = int(samples_df.loc[SAMPLE, "bound_top"])
-bbottom = int(samples_df.loc[SAMPLE, "bound_bottom"])
+bleft = int(row['bound_left'])
+bright = int(row['bound_right'])
+btop = int(row['bound_top'])
+bbottom = int(row['bound_bottom'])
 
 # Read video from file
 

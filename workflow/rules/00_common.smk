@@ -32,24 +32,54 @@ rule convert_metadata:
     script:
         "../scripts/convert_metadata.R"
 
+##########################
+# Set variables
+##########################
+
 # Read in samples file
-if os.path.exists(rules.convert_metadata.output[0]):
-    samples_df = pd.read_csv(rules.convert_metadata.output[0], comment = '#')
-    videos = sorted(list(set(samples_df['movie_name'])))
-    VIDEOS = []
-    for i in videos:
-        out = i.strip('.avi')
-        VIDEOS.append(out)
-    SAMPLES = samples_df['sample']
-    QUADRANTS = samples_df['quadrant']
+samples_df = pd.read_csv(config["samples_long"])
 
-    ASSAYS = ["open_field", "novel_object"]
+VIDEOS = []
+for i in sorted(list(set(samples_df['movie_name']))):
+    VIDEOS.append(i.strip('.avi'))
 
-    # Create full list for zipping
-    SAMPLES_ZIP = SAMPLES * len(ASSAYS)
-    QUADRANTS_ZIP = QUADRANTS * len(ASSAYS)
-    ASSAYS_ZIP = np.repeat(ASSAYS, len(SAMPLES))
+ASSAYS = ['open_field', 'novel_object']
 
+VIDEOS_ZIP = []
+for i in samples_df['movie_name']:
+    VIDEOS_ZIP.append(i.strip('.avi'))
+SAMPLES_ZIP = samples_df['sample']
+ASSAYS_ZIP = samples_df['assay']
+
+# Exclude samples that can't be tracked
+## Read in excluded samples
+excl_df = pd.read_csv("config/excluded_samples.csv")
+## Create 
+zip_df = pd.DataFrame(
+    {
+        'video': VIDEOS_ZIP,
+        'sample': SAMPLES_ZIP,
+        'assay': ASSAYS_ZIP
+    }
+)
+## Remove rows matching excluded samples
+for i, row in excl_df.iterrows():
+    target_assay = row['assay']
+    target_sample = row['sample']
+    zip_df.drop(
+        zip_df[
+            (zip_df['sample'] == target_sample) & \
+            (zip_df['assay'] == target_assay)
+            ].index,
+            inplace = True
+    )
+
+## Extract samples and assays
+VIDEOS_ZIP_EX = zip_df['video']
+SAMPLES_ZIP_EX = zip_df['sample']
+ASSAYS_ZIP_EX = zip_df['assay']
+
+##########################
 
 # Copy videos from FTP to Codon (for ease downstream)
 rule copy_videos:

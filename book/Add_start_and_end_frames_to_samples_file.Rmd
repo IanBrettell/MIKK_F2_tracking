@@ -1,0 +1,17 @@
+# Add start and end frames to samples file
+
+
+```{r}
+library(tidyverse)
+IN = here::here("config/samples_long.csv")
+
+# Read in 
+
+df = readr::read_csv(IN) %>% 
+  dplyr::mutate(frame_end = frame_start + (600*fps)) %>% 
+  dplyr::mutate(bgsub = as.character(bgsub),
+                bgsub = dplyr::case_when(bgsub == "TRUE" ~ "True",
+                                         bgsub == "FALSE" ~ "False")) %>% 
+  readr::write_csv(IN)
+```
+

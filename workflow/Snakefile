@@ -1,7 +1,7 @@
 include: "rules/00_common.smk"
 include: "rules/01_pre-processing.smk"
 include: "rules/02_tracking.smk"
-#include: "rules/03_qc.smk"
+include: "rules/03_qc.smk"
 
 ##### Target rules #####
 
@@ -40,31 +40,14 @@ rule all:
                 video = VIDEOS_ZIP_EX,
                 sample = SAMPLES_ZIP_EX,
         ),
-## coloured_trails
-#        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}_tracked.avi"),
-#                zip,
-#                assay = ASSAYS,
-#                sample = SAMPLES,
-#                quadrant = QUADRANTS
-#        ),
-## trajectories_to_csv
-#        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv"),
-#                zip,
-#                assay = ASSAYS,
-#                sample = SAMPLES,
-#                quadrant = QUADRANTS
-#        ),
-## assign_ref_test
-#        expand(os.path.join(
-#            config["data_store_dir"],
-#            "final_tracks/{assay}/{sample}_{quadrant}.csv"),
-#                zip,
-#                assay = ASSAYS,
-#                sample = SAMPLES,
-#                quadrant = QUADRANTS         
-#        ),
-## tracking_success
-#        "config/tracking_success.csv",
-
-#####################
+######################
+## 03_qc.smk
+######################
+        expand(rules.assign_ref_test.output,
+                zip,
+                assay = ASSAYS_ZIP_EX,
+                video = VIDEOS_ZIP_EX,
+                sample = SAMPLES_ZIP_EX
+        ),
+        rules.tracking_success.output,
 

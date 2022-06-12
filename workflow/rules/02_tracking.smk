@@ -84,7 +84,7 @@ rule track_videos:
         area_ceiling = get_area_ceiling,
     resources:
         # start at 5000
-        mem_mb = lambda wildcards, attempt: attempt * 5000
+        mem_mb = lambda wildcards, attempt: attempt * 20000
     container:
         config["idtrackerai"]
     shell:

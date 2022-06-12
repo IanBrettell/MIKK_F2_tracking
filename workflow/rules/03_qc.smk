@@ -6,7 +6,8 @@ def get_final_csvs(wildcards):
         config["working_dir"],
         "split",
         wildcards.assay,
-        "session_" + wildcards.sample + "_" + wildcards.quadrant,
+        wildcards.video,
+        "session_" + wildcards.sample,
         "trajectories_wo_gaps",
         "trajectories_wo_gaps.trajectories.csv"
         )
@@ -15,31 +16,43 @@ def get_final_csvs(wildcards):
         config["working_dir"],
         "split",
         wildcards.assay,
-        "session_" + wildcards.sample + "_" + wildcards.quadrant,
+        wildcards.video,
+        "session_" + wildcards.sample,
         "trajectories",
         "trajectories.trajectories.csv"
         )
     # If there is no "without gaps" file, return the "trajectories" file
     if os.path.exists(traj_wo_gaps_file):
         return(traj_wo_gaps_file)
-    elif os.path.exists(traj_file):
+    else:
         return(traj_file)
 
 # Get frames-per-second
 def get_fps(wildcards):
-    fps = int(samples_df.loc[samples_df["sample"] == wildcards.sample, "fps"])
-    return(fps)
+    fps = samples_df.loc[
+        (samples_df['sample'] == wildcards.sample) & \
+        (samples_df['assay'] == wildcards.assay),
+        "fps"].values[0]
+    return(str(fps))
+
+#samples_df.loc[
+#    (samples_df['sample'] == SAMPLE) & \
+#    (samples_df['assay'] == ASSAY),
+#    "fps"].values[0]
 
 # Get relative location of reference iCab fish
 def get_ref_loc(wildcards):
-    if wildcards.assay == "open_field":
-        target_col = "cab_coords_" + "of_" + wildcards.quadrant
-        ref_loc = samples_df.loc[samples_df["sample"] == wildcards.sample, target_col]
-    elif wildcards.assay == "novel_object":
-        target_col = "cab_coords_" + "no_" + wildcards.quadrant
-        ref_loc = samples_df.loc[samples_df["sample"] == wildcards.sample, target_col]
-    ref_loc = ref_loc.values[0]
-    return(ref_loc)
+    cab_loc = samples_df.loc[(samples_df['sample'] == wildcards.sample) & \
+                             (samples_df['assay'] == wildcards.assay), \
+                             'cab_coords'].values[0]
+    # `ref_loc` is nan if there are two iCabs, so convert to string
+    if pd.isna(cab_loc):
+        cab_loc = "NA"
+    return(cab_loc)
+
+#samples_df.loc[(samples_df['sample'] == SAMPLE) & \
+#                             (samples_df['assay'] == ASSAY), \
+#                             'cab_coords'].values[0]
 
 # Assign reference and test fish IDs, and filter for frames up to 10 minutes
 rule assign_ref_test:
@@ -47,13 +60,13 @@ rule assign_ref_test:
         get_final_csvs,
     output:
         os.path.join(
-            config["data_store_dir"],
-            "final_tracks/{assay}/{sample}_{quadrant}.csv"
+            config["working_dir"],
+            "final_tracks/{assay}/{video}/{sample}.csv"
         ),
     log:
         os.path.join(
             config["working_dir"],
-            "logs/assign_ref_test/{assay}/{sample}/{quadrant}.log"
+            "logs/assign_ref_test/{assay}/{video}/{sample}.log"
         ),
     params:
         fps = get_fps,
@@ -68,9 +81,9 @@ rule tracking_success:
     input:
         expand(rules.assign_ref_test.output,
             zip,
-            assay = ASSAYS,
-            sample = SAMPLES,
-            quadrant = QUADRANTS                      
+            assay = ASSAYS_ZIP_EX,
+            video = VIDEOS_ZIP_EX,
+            sample = SAMPLES_ZIP_EX                   
         ),
     output:
         "config/tracking_success.csv"
@@ -94,7 +107,8 @@ def get_trajectories_file(wildcards):
         config["working_dir"],
         "split",
         wildcards.assay,
-        "session_" + wildcards.sample + "_" + wildcards.quadrant,
+        wildcards.video,
+        "session_" + wildcards.sample,
         "trajectories_wo_gaps",
         "trajectories_wo_gaps.npy"
         )
@@ -103,7 +117,8 @@ def get_trajectories_file(wildcards):
         config["working_dir"],
         "split",
         wildcards.assay,
-        "session_" + wildcards.sample + "_" + wildcards.quadrant,
+        wildcards.video,
+        "session_" + wildcards.sample,
         "trajectories",
         "trajectories.npy"
         )
@@ -113,28 +128,3 @@ def get_trajectories_file(wildcards):
     elif os.path.exists(traj_file):
         return(traj_file)
 
-# Generate videos with coloured trails superimposed
-rule coloured_trails:
-    input:
-        video_object=os.path.join(
-            config["working_dir"],
-            "split/{assay}/session_{sample}_{quadrant}/video_object.npy",
-        ),
-        trajectories=get_trajectories_file,
-    output:
-        os.path.join(
-            config["working_dir"],
-            "split/{assay}/{sample}_{quadrant}_tracked.avi",
-        ),
-    log:
-        os.path.join(
-            config["working_dir"],
-            "logs/coloured_trails/{assay}/{sample}/{quadrant}.log"
-        ),
-    container:
-        config["idtrackerai"]
-    resources:
-        mem_mb=5000,
-    script:
-        "../scripts/coloured_trails.py"
-    

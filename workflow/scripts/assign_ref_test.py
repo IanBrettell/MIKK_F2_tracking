@@ -25,10 +25,10 @@ import pandas as pd
 # Get variables
 
 ## Debug
-IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split/novel_object/session_20211220_1527_R_q4/trajectories_wo_gaps/trajectories_wo_gaps.trajectories.csv"
+IN_FILE = "/hps/nobackup/birney/users/ian/MIKK_F2_tracking/split/novel_object/20211220_1527_R/session_20211220_1527_38-2_21-2_R_q1/trajectories_wo_gaps/trajectories_wo_gaps.trajectories.csv"
 REF_LOC = "Top"
 FPS = 30
-OUT_FILE = "/nfs/research/birney/users/ian/MIKK_F2_tracking/novel_object/20211118_1110_R_q3.csv"
+OUT_FILE = "/nfs/research/birney/users/ian/MIKK_F2_tracking/novel_object/20211220_1527_38-2_21-2_R_q1.csv"
 
 ## True
 IN_FILE = snakemake.input[0]

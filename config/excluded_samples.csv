@@ -1,3 +1,7 @@
 assay,sample,reason
 novel_object,20220428_1015_18-2_21-2_L_q1,one fish is invisible behind the barrier for some time
 novel_object,20220323_1421_38-2_40-1_L_q4,impossible to segment due to both fishes being very still and iCab sitting next to the novel object
+novel_object,20211210_1036_38-2_18-2_R_q3,impossible to segment due to both fishes being very still and iCab sitting next to the novel object
+novel_object,20211210_1346_38-2_18-2_R_q2,one fish is still and the other hides behind the object
+novel_object,20211201_1500_38-2_18-2_R_q1,both fish are still and one remains next to the object
+novel_object,20220329_0919_21-2_40-1_L_q4,impossible to segment due to MIKK fish sitting next to the novel object very still

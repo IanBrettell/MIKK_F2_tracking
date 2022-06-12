@@ -34,7 +34,7 @@ final_df = purrr::map(IN_FILES, function(IN_FILE){
         ) %>%
         # get `sample` and `assay`
         tidyr::separate(path,
-                        into = c(rep(NA, 8), "assay", "sample"),
+                        into = c(rep(NA, 8), "assay", "video", "sample"),
                         sep = "/") %>%
         # remove .csv extension from `sample`
         dplyr::mutate(sample = sample %>%

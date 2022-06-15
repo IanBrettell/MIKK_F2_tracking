@@ -79,6 +79,39 @@ VIDEOS_ZIP_EX = zip_df['video']
 SAMPLES_ZIP_EX = zip_df['sample']
 ASSAYS_ZIP_EX = zip_df['assay']
 
+# Get samples with over 85% tracking success
+
+## Read in .csv
+ts_df = pd.read_csv('config/tracking_success.csv')
+## Filter for samples with < 85% tracking success
+ts_df = ts_df.loc[ts_df['prop_success'] < 0.85]
+## Remove samples with 
+for i, row in ts_df.iterrows():
+    target_assay = row['assay']
+    target_sample = row['sample']
+    target_video = row['video']
+    zip_df.drop(
+        zip_df[
+            (zip_df['sample'] == target_sample) & \
+            (zip_df['assay'] == target_assay) & \
+            (zip_df['video'] == target_video)
+            ].index,
+            inplace = True
+    )
+## Get filtered samples and assays
+VIDEOS_ZIP_EX_TRK = zip_df['video']
+SAMPLES_ZIP_EX_TRK = zip_df['sample']
+ASSAYS_ZIP_EX_TRK = zip_df['assay']
+## Multiply lists for combinations with `seconds_interval`
+n_intervals = len(config["seconds_interval"])
+VIDEOS_ZIP_EX_TRK_INT = list(VIDEOS_ZIP_EX_TRK.values) * n_intervals
+SAMPLES_ZIP_EX_TRK_INT = list(SAMPLES_ZIP_EX_TRK.values) * n_intervals
+ASSAYS_ZIP_EX_TRK_INT = list(ASSAYS_ZIP_EX_TRK.values) * n_intervals
+## Multiply each element of `seconds_intervals` by length of original SAMPLES list
+INTERVALS_ZIP_EX_TRK_INT = np.repeat(config["seconds_interval"], len(SAMPLES_ZIP_EX_TRK_INT))
+
+
+
 ##########################
 
 # Copy videos from FTP to Codon (for ease downstream)
@@ -129,29 +162,3 @@ rule add_fps:
         "../scripts/add_fps.py"
 
 
-
-# Set variables
-
-#SAMPLES = samples_df["sample"]
-#ASSAYS = ["open_field", "novel_object"]
-#QUADRANTS = ["q1", "q2", "q3", "q4"]
-#
-## Remove faulty videos from sample list
-#
-## Read in videos to be excluded
-#excl_df = pd.read_csv(config["excluded_videos"], comment = "#")
-#
-### Create list of variable lists
-#full_list = [SAMPLES, ASSAYS, QUADRANTS]
-### Create list of tuple combinations
-#combos = list(itertools.product(*full_list))
-#
-## Remove unavailable combinations
-#excl_df = excl_df.reset_index()
-#for index, row in excl_df.iterrows():
-#    combos.remove((row['sample'], row['assay'], row['quadrant']))
-#
-## Create new lists of variables
-#SAMPLES = [i[0] for i in combos]
-#ASSAYS = [i[1] for i in combos]
-#QUADRANTS = [i[2] for i in combos]

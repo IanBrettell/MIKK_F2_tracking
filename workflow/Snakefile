@@ -2,6 +2,7 @@ include: "rules/00_common.smk"
 include: "rules/01_pre-processing.smk"
 include: "rules/02_tracking.smk"
 include: "rules/03_qc.smk"
+include: "rules/04_hmm.smk"
 
 ##### Target rules #####
 
@@ -11,9 +12,9 @@ rule all:
 ## 00_common.smk
 ######################
         #rules.convert_metadata.output,
-######################
-## 01_pre-processing.smk
-######################
+#####################
+# 01_pre-processing.smk
+#####################
         expand(rules.copy_videos.output,
                 video = VIDEOS
         ),
@@ -31,18 +32,18 @@ rule all:
                 video = VIDEOS_ZIP,
                 sample = SAMPLES_ZIP,
         ),
-######################
-## 02_tracking.smk
-######################
+#####################
+# 02_tracking.smk
+#####################
         expand(rules.track_videos.output,
                 zip,
                 assay = ASSAYS_ZIP_EX,
                 video = VIDEOS_ZIP_EX,
                 sample = SAMPLES_ZIP_EX,
         ),
-######################
-## 03_qc.smk
-######################
+#####################
+# 03_qc.smk
+#####################
         expand(rules.assign_ref_test.output,
                 zip,
                 assay = ASSAYS_ZIP_EX,
@@ -50,4 +51,19 @@ rule all:
                 sample = SAMPLES_ZIP_EX
         ),
         rules.tracking_success.output,
-
+#####################
+# 04_hmm.smk
+#####################
+        expand(rules.movement_metrics.output,
+                zip,
+                assay = ASSAYS_ZIP_EX_TRK_INT,
+                video = VIDEOS_ZIP_EX_TRK_INT,
+                sample = SAMPLES_ZIP_EX_TRK_INT,
+                interval = INTERVALS_ZIP_EX_TRK_INT
+        ),
+        expand(rules.merge_csvs.output,
+                interval = config["seconds_interval"]
+        ),
+        expand(rules.send_to_shared_folder.output,
+                interval = config["seconds_interval"]
+        ),

@@ -12,7 +12,15 @@ excluded_videos:
 ####################
 # Parameters
 ####################
-
+seconds_interval:
+    - 0.05
+    - 0.08
+    - 0.1
+    - 0.15
+    - 0.2
+    - 0.3
+    - 0.5
+    - 1
 ####################
 # Locations
 ####################
@@ -24,6 +32,8 @@ working_dir:
     /hps/nobackup/birney/users/ian/MIKK_F2_tracking
 data_store_dir:
     /nfs/research/birney/users/ian/MIKK_F2_tracking
+shared_dir:
+    /hps/nobackup/birney/users/ian/MIKK_all
 ####################
 # Containers
 ####################
